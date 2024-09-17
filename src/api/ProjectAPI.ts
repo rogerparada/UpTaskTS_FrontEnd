@@ -27,7 +27,7 @@ export async function getProjects() {
 }
 export async function getProjectById(projectId: Project["_id"]) {
 	try {
-		const { data } = await api.get(`/projects/${projectId}`);
+		const { data } = await api.get<ProjectAPIType>(`/projects/${projectId}`);
 		const response = projectSchema.safeParse(data);
 		if (response.success) {
 			return response.data;
@@ -40,7 +40,7 @@ export async function getProjectById(projectId: Project["_id"]) {
 }
 
 type ProjectAPIType = {
-	projectId: string;
+	projectId: Project["_id"];
 	formData: ProjectFormData;
 };
 
