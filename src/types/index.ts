@@ -30,7 +30,22 @@ export const dashBoardProjectSchema = z.array(
 	})
 );
 
+export const authSchema = z.object({
+	name: z.string(),
+	email: z.string().email(),
+	password: z.string(),
+	password_confirmation: z.string(),
+	token: z.string(),
+});
+
+export type Auth = z.infer<typeof authSchema>;
+
 export type Project = z.infer<typeof projectSchema>;
 export type Task = z.infer<typeof taskSchema>;
+export type UserLoginForm = Pick<Auth, "email" | "password">;
+export type UserRegistrationForm = Pick<Auth, "email" | "password" | "name" | "password_confirmation">;
+export type RequestConfirmationCodeForm = Pick<Auth, "email">;
+export type ConfirmToken = Pick<Auth, "token">;
+
 export type ProjectFormData = Pick<Project, "projectName" | "clientName" | "description">;
 export type TaskFormData = Pick<Task, "name" | "description">;
