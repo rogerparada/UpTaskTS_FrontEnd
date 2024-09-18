@@ -72,6 +72,9 @@ export default function LoginView() {
 				<Link to={"/auth/register"} className="text-white text-center">
 					Don't have an account? Sign up here.
 				</Link>
+				<Link to="/auth/forgot-password" className="text-center text-gray-300 font-normal">
+					Did you forgot your password? Reset it here
+				</Link>
 			</nav>
 		</>
 	);
