@@ -38,10 +38,20 @@ export const authSchema = z.object({
 	token: z.string(),
 });
 
-export type Auth = z.infer<typeof authSchema>;
+export const userSchema = authSchema
+	.pick({
+		name: true,
+		email: true,
+	})
+	.extend({
+		_id: z.string(),
+	});
 
+export type Auth = z.infer<typeof authSchema>;
+export type User = z.infer<typeof userSchema>;
 export type Project = z.infer<typeof projectSchema>;
 export type Task = z.infer<typeof taskSchema>;
+
 export type UserLoginForm = Pick<Auth, "email" | "password">;
 export type UserRegistrationForm = Pick<Auth, "email" | "password" | "name" | "password_confirmation">;
 export type RequestConfirmationCodeForm = Pick<Auth, "email">;
