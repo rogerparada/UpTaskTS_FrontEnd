@@ -7,6 +7,7 @@ import { toast } from "react-toastify";
 import { formatDate } from "@/utils/utils";
 import { statusTranslations } from "@/locales/en";
 import { TaskStatus } from "@/types/index";
+import NotePanel from "../notes/NotePanel";
 
 export default function TaskModalDetails() {
 	const location = useLocation();
@@ -82,16 +83,19 @@ export default function TaskModalDetails() {
 											{data.name}
 										</Dialog.Title>
 										<p className="text-lg text-slate-500 mb-2">Description: {data.description}</p>
-										<p className="text-xl text-slate-500 mb-2 font-bold">Changes History</p>
 										{data.completedBy.length > 0 && (
-											<ul className="list-decimal ml-5">
-												{data.completedBy.map((activityLog) => (
-													<li key={activityLog._id}>
-														<span className="font-bold text-slate-600">{statusTranslations[activityLog.status]}: </span>
-														{activityLog.user.name}
-													</li>
-												))}
-											</ul>
+											<>
+												<p className="font-bold text-2xl - text-slate-600 my-5">Changes History</p>
+
+												<ul className="list-decimal ml-5">
+													{data.completedBy.map((activityLog) => (
+														<li key={activityLog._id}>
+															<span className="font-bold text-slate-600">{statusTranslations[activityLog.status]}: </span>
+															{activityLog.user.name}
+														</li>
+													))}
+												</ul>
+											</>
 										)}
 										<div className="my-5 space-y-3">
 											<label className="font-bold" htmlFor="status">
@@ -111,6 +115,7 @@ export default function TaskModalDetails() {
 												))}
 											</select>
 										</div>
+										<NotePanel notes={data.notes} />
 									</Dialog.Panel>
 								</Transition.Child>
 							</div>

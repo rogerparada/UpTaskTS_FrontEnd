@@ -20,6 +20,14 @@ export const userSchema = authSchema
 		_id: z.string(),
 	});
 
+export const noteSchema = z.object({
+	_id: z.string(),
+	content: z.string(),
+	createdBy: userSchema,
+	createdAt: z.string(),
+	task: z.string(),
+});
+
 export const taskSchema = z.object({
 	_id: z.string(),
 	name: z.string(),
@@ -33,6 +41,7 @@ export const taskSchema = z.object({
 			status: taskStatusSchema,
 		})
 	),
+	notes: z.array(noteSchema.extend({ createdBy: userSchema })),
 	createdAt: z.string(),
 	updatedAt: z.string(),
 });
@@ -60,6 +69,7 @@ export type Auth = z.infer<typeof authSchema>;
 export type User = z.infer<typeof userSchema>;
 export type Project = z.infer<typeof projectSchema>;
 export type Task = z.infer<typeof taskSchema>;
+export type Note = z.infer<typeof noteSchema>;
 
 export type UserLoginForm = Pick<Auth, "email" | "password">;
 export type UserRegistrationForm = Pick<Auth, "email" | "password" | "name" | "password_confirmation">;
@@ -70,6 +80,7 @@ export type NewPasswordForm = Pick<Auth, "password" | "password_confirmation">;
 
 export type ProjectFormData = Pick<Project, "projectName" | "clientName" | "description">;
 export type TaskFormData = Pick<Task, "name" | "description">;
+export type NoteFormData = Pick<Note, "content">;
 
 export const teamMemberSchema = userSchema.pick({
 	name: true,
