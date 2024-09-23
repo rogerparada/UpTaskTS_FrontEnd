@@ -11,6 +11,7 @@ export default function EditProjectView() {
 		queryKey: ["editProject", projectId],
 		queryFn: () => getProjectById(projectId),
 		retry: false,
+		enabled: !!projectId,
 	});
 
 	if (isLoading) {

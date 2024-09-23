@@ -5,8 +5,11 @@ import { deleteProject, getProjects } from "@/api/ProjectAPI";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
+import { useAuth } from "@/hooks/useAuth";
+import { isManager } from "@/utils/policies";
 
 export default function DashboardView() {
+	const { data: user, isLoading: authLoading } = useAuth();
 	const { data, isLoading } = useQuery({
 		queryKey: ["projects"],
 		queryFn: getProjects,
@@ -25,9 +28,9 @@ export default function DashboardView() {
 		},
 	});
 
-	if (isLoading) return <div className="flex justify-center items-center p-10">Loading...</div>;
+	if (isLoading && authLoading) return <div className="flex justify-center items-center p-10">Loading...</div>;
 
-	if (data) {
+	if (data && user) {
 		return (
 			<>
 				<h1 className="text-5xl font-black">Projects</h1>
@@ -46,6 +49,17 @@ export default function DashboardView() {
 							<li key={project._id} className="flex justify-between gap-x-6 px-5 py-10">
 								<div className="flex min-w-0 gap-x-4">
 									<div className="min-w-0 flex-auto space-y-2">
+										<div className="mb-2">
+											{isManager(project.manager, user._id) ? (
+												<p className="font-bold text-xs uppercase bg-sky-50 text-blue-400 border-2 border-blue-500 rounded-lg inline-block py-1 px-5">
+													Manager
+												</p>
+											) : (
+												<p className="font-bold text-xs uppercase bg-green-50 text-green-400 border-2 border-green-500 rounded-lg inline-block py-1 px-5">
+													Collaborator
+												</p>
+											)}
+										</div>
 										<Link to={`/projects/${project._id}`} className="text-gray-600 cursor-pointer hover:underline text-3xl font-bold">
 											{project.projectName}
 										</Link>
@@ -74,22 +88,26 @@ export default function DashboardView() {
 														View Project
 													</Link>
 												</Menu.Item>
-												<Menu.Item>
-													<Link to={`/projects/${project._id}/edit`} className="block px-3 py-1 text-sm leading-6 text-gray-900">
-														Edit Project
-													</Link>
-												</Menu.Item>
-												<Menu.Item>
-													<button
-														type="button"
-														className="block px-3 py-1 text-sm leading-6 text-red-500"
-														onClick={() => {
-															mutate(project._id);
-														}}
-													>
-														Delete Project
-													</button>
-												</Menu.Item>
+												{isManager(project.manager, user._id) && (
+													<>
+														<Menu.Item>
+															<Link to={`/projects/${project._id}/edit`} className="block px-3 py-1 text-sm leading-6 text-gray-900">
+																Edit Project
+															</Link>
+														</Menu.Item>
+														<Menu.Item>
+															<button
+																type="button"
+																className="block px-3 py-1 text-sm leading-6 text-red-500"
+																onClick={() => {
+																	mutate(project._id);
+																}}
+															>
+																Delete Project
+															</button>
+														</Menu.Item>
+													</>
+												)}
 											</Menu.Items>
 										</Transition>
 									</Menu>

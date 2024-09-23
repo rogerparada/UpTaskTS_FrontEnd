@@ -38,7 +38,7 @@ export default function NavMenu({ name }: NavMenuProps) {
 							My Profile
 						</Link>
 						<Link to="/" className="block p-2 hover:text-blue-950">
-							Mine Projects
+							My Projects
 						</Link>
 						<button className="block p-2 hover:text-blue-950" type="button" onClick={logout}>
 							Log Out
