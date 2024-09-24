@@ -1,6 +1,7 @@
 import api from "@/lib/axios";
 import { isAxiosError } from "axios";
 import {
+	CheckPasswordForm,
 	ConfirmToken,
 	ForgotPasswordForm,
 	NewPasswordForm,
@@ -101,6 +102,18 @@ export async function getUser() {
 		if (result.success) {
 			return result.data;
 		}
+	} catch (error) {
+		if (isAxiosError(error) && error.response) {
+			throw new Error(error.response.data.error);
+		}
+	}
+}
+
+export async function checkPass(formData: CheckPasswordForm) {
+	try {
+		const url = "/auth/check-password";
+		const { data } = await api.post<string>(url, formData);
+		return data;
 	} catch (error) {
 		if (isAxiosError(error) && error.response) {
 			throw new Error(error.response.data.error);

@@ -1,31 +1,19 @@
 import { Fragment } from "react";
 import { Menu, Transition } from "@headlessui/react";
 import { EllipsisVerticalIcon } from "@heroicons/react/20/solid";
-import { deleteProject, getProjects } from "@/api/ProjectAPI";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Link } from "react-router-dom";
-import { toast } from "react-toastify";
+import { getProjects } from "@/api/ProjectAPI";
+import { useQuery } from "@tanstack/react-query";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { isManager } from "@/utils/policies";
+import DeleteProjectModal from "@/components/projects/DeleteProjectModal";
 
 export default function DashboardView() {
+	const navigate = useNavigate();
 	const { data: user, isLoading: authLoading } = useAuth();
 	const { data, isLoading } = useQuery({
 		queryKey: ["projects"],
 		queryFn: getProjects,
-	});
-
-	const queryClient = useQueryClient();
-
-	const { mutate } = useMutation({
-		mutationFn: deleteProject,
-		onError: (error) => {
-			toast.error(error.message);
-		},
-		onSuccess: (data) => {
-			queryClient.invalidateQueries({ queryKey: ["projects"] });
-			toast.success(data);
-		},
 	});
 
 	if (isLoading && authLoading) return <div className="flex justify-center items-center p-10">Loading...</div>;
@@ -100,7 +88,7 @@ export default function DashboardView() {
 																type="button"
 																className="block px-3 py-1 text-sm leading-6 text-red-500"
 																onClick={() => {
-																	mutate(project._id);
+																	navigate(`${location.pathname}?deleteProject=${project._id}`);
 																}}
 															>
 																Delete Project
@@ -125,6 +113,7 @@ export default function DashboardView() {
 						}
 					</p>
 				)}
+				<DeleteProjectModal />
 			</>
 		);
 	}
