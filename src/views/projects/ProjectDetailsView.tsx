@@ -21,7 +21,7 @@ export default function ProjectDetailsView() {
 		retry: false,
 	});
 	const canEdit = useMemo(() => data?.manager === user?._id, [data, user]);
-	console.log(data?.tasks);
+
 	if (isLoading && authLoading) {
 		return <p className="text-center py-20">Loading...</p>;
 	}
