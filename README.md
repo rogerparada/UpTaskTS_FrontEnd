@@ -17,6 +17,7 @@ Project and task management
   * React
   * TypeScript
   * Vite
+  * TanStack Query
   * Zustand
   * Zod
 
